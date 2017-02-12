@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 打開開發者模式，如有bug會顯示之類，但消耗性能 -->
+	<constant name="struts.devMode" value="true"></constant>
+	<!-- 關閉動態方法方法调用，這樣就不能在瀏覽器通過調用類方法來調用action了 <constant name="struts.enable.DynamicMethodInvocation" 
+		value="false" /> -->
+	<!-- 配置包信息 -->
+	<package name="default" extends="struts-default">
+		<!-- 配置Action：Action JavaBean -->
+		<default-action-ref name="nologin"></default-action-ref>
+		<action name="nologin">
+			<result>/pages/login.jsp</result>
+		</action>
+	</package>
+	<package name="user" namespace="/user" extends="struts-default">
+		<!-- 配置Action：Action JavaBean -->
+		<action name="login" class="loginAction">
+			<interceptor-ref name="token"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="invalid.token">/pages/error.jsp</result>
+			<result name="success">/pages/board.jsp</result>
+			<result name="fail">/pages/login.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+		<action name="createaccount" class="createAccountAction">
+			<result name="success">/pages/createaccount.jsp</result>
+			<result name="error">/pages/login.jsp</result>
+		</action>
+		<action name="firstinto" class="firstIntoAction">
+			<interceptor-ref name="token"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="invalid.token">/pages/error.jsp</result>
+			<result name="success">/pages/board.jsp</result>
+			<result name="fail">/pages/createaccount.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+		<action name="logout" class="logoutAction">
+			<result>/pages/login.jsp</result>
+		</action>
+		<action name="lookuser" class="lookUserAction">
+			<result name="success">/pages/usermessage.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+		<action name="altermessage*" class="alterUserAction">
+			<result name="success">/pages/alteruser.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+		<action name="alterpassword*" class="alterUserAction">
+			<result name="success">/pages/changepassword.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+		<action name="confirmalter" class="confirmAlterUserAction">
+			<interceptor-ref name="token"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="invalid.token">/pages/error.jsp</result>
+			<!--防止重複提交數據<s:token></s:token> -->
+			<result name="success">/pages/usermessage.jsp</result>
+			<result name="fail">/pages/alteruser.jsp</result>
+			<result name="fail2">/pages/changepassword.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+	</package>
+	<package name="board" namespace="/board" extends="struts-default">
+		<!-- 配置Action：Action JavaBean -->
+		<global-results>
+			<result name="error">/pages/error.jsp</result>
+		</global-results>
+		<action name="changepage*" class="changePageAction">
+			<result name="success">/pages/board.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+
+		<action name="addnews*" class="addNewsAction">
+			<result name="success">/pages/addnews.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+		<action name="confirmnews" class="confirmNewsAction">
+			<!--防止重複提交數據<s:token></s:token> -->
+			<interceptor-ref name="token"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="invalid.token">/pages/error.jsp</result>
+			<result name="success">/pages/board.jsp</result>
+			<result name="fail">/pages/addnews.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+		<action name="confirmalternews*" class="confirmAlterNewsAction">
+			<!--防止重複提交數據<s:token></s:token> -->
+			<interceptor-ref name="token"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="invalid.token">/pages/error.jsp</result>
+			<result name="success">/pages/seenews.jsp</result>
+			<result name="notfound">/pages/notfoundnews.jsp</result>
+			<result name="fail">/pages/alternews.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+		<action name="deletenews*" class="deleteNewsAction">
+			<!--防止重複提交數據<s:token></s:token> -->
+			<interceptor-ref name="token"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="invalid.token">/pages/error.jsp</result>
+			<result name="success">/pages/board.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+		<action name="deletecheckednews" class="deleteNewsAction">
+			<!--防止重複提交數據<s:token></s:token> -->
+			<interceptor-ref name="token"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="invalid.token">/pages/error.jsp</result>
+			<result name="success">/pages/usermessage.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+		<action name="deletemynews*" class="deleteNewsAction">
+			<!--防止重複提交數據<s:token></s:token> -->
+			<interceptor-ref name="token"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="invalid.token">/pages/error.jsp</result>
+			<result name="success">/pages/usermessage.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+		<action name="alternews*" class="alterNewsAction">
+			<result name="success">/pages/alternews.jsp</result>
+			<result name="notfound">/pages/notfoundnews.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+		<action name="looknews*" class="lookNewsAction">
+			<result name="success">/pages/seenews.jsp</result>
+			<result name="notfound">/pages/notfoundnews.jsp</result>
+			<result name="error">/pages/error.jsp</result>
+		</action>
+	</package>
+</struts>

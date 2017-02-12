@@ -1,0 +1,40 @@
+<?xml version="1.0"?>  
+<!DOCTYPE hibernate-mapping PUBLIC   
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.test.entity.user">
+	<class name="User" table="user" >
+		<cache usage="read-write" />
+		<!--主鍵策略 -->
+		<id name="user_id" type="java.lang.String" length="32" >
+			<column name="user_id"></column>
+			<generator class="assigned" />
+		</id>
+		<property name="user_name" type="java.lang.String" not-null="true">
+			<column name="user_name" length="32"></column>
+		</property>
+		<property name="user_password" type="java.lang.String" not-null="true">
+			<column name="user_password" length="32"></column>
+		</property>
+		<property name="user_mail" type="java.lang.String">
+			<column name="user_mail" length="32"></column>
+		</property>
+		<property name="user_phone" type="java.lang.String">
+			<column name="user_phone" length="32"></column>
+		</property>
+		<property name="user_newsCounts" type="java.lang.Integer" not-null="true">
+			<column name="user_newsCounts" length="32"></column>
+		</property>
+		<property name="createTime" type="java.util.Date">
+			<column name="createTime" length="32"></column>
+		</property>
+		<property name="lastLoginTime" type="java.util.Date">
+			<column name="lastLoginTime" length="32"></column>
+		</property>
+		<!-- 一個作者對應多個公告  
+		<set name="Board" cascade="all" lazy="false">
+		<cache usage="read-write"/> 
+		<key column="author_id"/>
+		<one-to-many class="com.test.entity.board.Board" /> </set>-->
+	</class>
+</hibernate-mapping>  

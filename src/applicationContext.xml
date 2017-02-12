@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd   
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+    http://www.springframework.org/schema/tx  
+    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    ">
+	<!-- 配置數據源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/boardtest?characterEncoding=UTF-8" />
+		<property name="username" value="root" />
+		<property name="password" value="qwer1234" />
+		<property name="initialSize" value="3" />
+		<property name="maxActive" value="500" />
+		<property name="maxIdle" value="2" />
+		<property name="minIdle" value="1" />
+	</bean>
+	<!-- 配置會話工廠 -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 接管hibernate對象映射文件 -->
+		<property name="mappingResources">
+			<list>
+				<value>com/test/entity/board/Board.hbm.xml</value>
+				<value>com/test/entity/user/User.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+				hibernate.hbm2ddl.auto=update
+				hibernate.show_sql=false
+				hibernate.format_sql=false
+				<!--二級緩存 -->
+				hibernate.cache.use_query_cache=true
+				hibernate.cache.use_second_level_cache=true
+				<!--hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider  hibernate  3-->
+				hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory<!--hibernate 4 -->
+				hibernate.generate_statistics=true
+				hibernate.cache.provider_configuration_file_resource_path=com/test/dao/ehcache.xml
+			</value>
+		</property>
+	</bean>
+	<!-- 配置注入方式註解 -->
+	<context:annotation-config>
+	</context:annotation-config>
+	<!-- 配置action -->
+	<bean name="loginAction" class="com.test.action.useraction.LoginAction" scope="prototype">
+	</bean>
+	<bean name="createAccountAction" class="com.test.action.useraction.CreateAccountAction" scope="prototype">
+	</bean>
+	<bean name="firstIntoAction" class="com.test.action.useraction.FirstIntoAction" scope="prototype">
+	</bean>
+	<bean name="logoutAction" class="com.test.action.useraction.LogoutAction" scope="prototype">
+	</bean>
+	<bean name="lookUserAction" class="com.test.action.useraction.LookUserAction" scope="prototype">
+	</bean>
+	<bean name="alterUserAction" class="com.test.action.useraction.AlterUserAction" scope="prototype">
+	</bean>
+	<bean name="confirmAlterUserAction" class="com.test.action.useraction.ConfirmAlterUserAction" scope="prototype">
+	</bean>
+	
+	<bean name="changePageAction" class="com.test.action.boardaction.ChangePageAction" scope="prototype">
+	</bean>
+	<bean name="addNewsAction" class="com.test.action.boardaction.AddNewsAction" scope="prototype">
+	</bean>
+	<bean name="confirmNewsAction" class="com.test.action.boardaction.ConfirmNewsAction" scope="prototype">
+	</bean>
+	<bean name="confirmAlterNewsAction" class="com.test.action.boardaction.ConfirmAlterNewsAction" scope="prototype">
+	</bean>
+	<bean name="lookNewsAction" class="com.test.action.boardaction.LookNewsAction" scope="prototype">
+	</bean>
+	<bean name="deleteNewsAction" class="com.test.action.boardaction.DeleteNewsAction" scope="prototype">
+	</bean>
+	<bean name="alterNewsAction" class="com.test.action.boardaction.AlterNewsAction" scope="prototype">
+	</bean>
+	<!-- 配置boardServiceImpl對象 -->
+	<bean id="boardServiceImpl" class="com.test.service.serviceImpl.BoardServiceImpl">
+	</bean>
+	<!-- 配置userServiceImpl對象 -->
+	<bean id="userServiceImpl" class="com.test.service.serviceImpl.UserServiceImpl">
+	</bean>
+	<!--啟用註解掃描 -->
+	<context:annotation-config></context:annotation-config>
+		<!-- 配置boardDaoImpl對象 -->
+		<bean id="boardDaoImpl" class="com.test.dao.daoImpl.BoardDaoImpl">
+		</bean>
+		<!-- 配置userDaoImpl對象 -->
+		<bean id="userDaoImpl" class="com.test.dao.daoImpl.UserDaoImpl">
+		</bean>
+
+		<!-- 配置事務管理器,統一管理sessionFactory對象 -->
+		<bean id="txManager"
+			class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+			<property name="sessionFactory" ref="sessionFactory">
+			</property>
+		</bean>
+		<!-- 後用事務註解 -->
+		<tx:annotation-driven transaction-manager="txManager" />
+</beans>
