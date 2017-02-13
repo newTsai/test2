@@ -43,8 +43,7 @@ public class DeleteNewsAction extends ActionSupport {
 		if ((String) session.get("id") == null || ((String) session.get("id")).equals(""))
 			return str;
 		if (boardServiceImpl.deleteAnnouncementList(id)) {
-			session.put("search","");
-			int totalPages[] = new int[boardServiceImpl.getPageCounts("")];
+			int totalPages[] = new int[boardServiceImpl.getPageCounts((String) session.get("search"))];
 			int nowPage = (int) session.get("nowPage");
 			for (int i = 0; i < totalPages.length; i++)
 				totalPages[i] = i + 1;
@@ -53,7 +52,7 @@ public class DeleteNewsAction extends ActionSupport {
 				session.put("nowPage", totalPages.length);
 				nowPage = totalPages.length;
 			}
-			session.put("boards", boardServiceImpl.changePage(nowPage - 1,""));
+			session.put("boards", boardServiceImpl.changePage(nowPage - 1, (String) session.get("search")));
 			setUser(userServiceImpl.getUser((String) session.get("id")));
 			setUserBoards(boardServiceImpl.searchAnnouncements((String) session.get("id")));
 			str = "success";
